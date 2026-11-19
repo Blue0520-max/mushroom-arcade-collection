@@ -22,7 +22,7 @@ body {
   border-bottom: 4px solid #c4ed86;
   background:
     linear-gradient(90deg, #081e1aed 2%, #081e1aca 43%, #081e1a28 82%),
-    url("./v3/assets/art/cover.webp") center / cover;
+    url("./v4/assets/art/cover.webp") center / cover;
 }
 
 .eyebrow { margin: 0 0 14px; font-weight: 750; letter-spacing: .18em; color: #daf4aa; }

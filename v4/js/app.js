@@ -13,29 +13,30 @@
   const pad=n=>String(n).padStart(2,"0");
   const clock=n=>Math.floor(n/60)+":"+pad(Math.floor(n)%60);
   const slot=(index)=>(Math.floor(index/2)+1)+"-"+(index%2+1);
-  const key="mushroom-arcade-progress-v3",oldKey="mushroom-arcade-progress-v2";
+  const key="mushroom-arcade-progress-v4";
+  const formerSharedKey="mushroom-arcade-progress-v3";
   const starCount=c=>c.stars.length+(c.secret?.stars.length||0);
   const formatted=n=>String(Math.floor(n||0)).padStart(6,"0");
   const store={mode:"classic",sound:true,levels:{},high:{}};
-  let storageReady=true,legacyClears=0;
+  let storageReady=true;
   function modeNumbers(values){
     const out={};
     for(const id of Object.keys(ARCADE_MODES))if(Number.isFinite(values?.[id])&&values[id]>=0)out[id]=values[id];
     return out;
   }
   try{
-    const legacy=JSON.parse(localStorage.getItem(oldKey)||localStorage.getItem("mushroom-arcade-progress-v1")||"{}")||{};
-    const raw=JSON.parse(localStorage.getItem(key)||"{}")||{};
-    const pref=raw.mode?raw:legacy;
-    if(Object.hasOwn(ARCADE_MODES,pref.mode))store.mode=pref.mode;
-    if(typeof pref.sound==="boolean")store.sound=pref.sound;
-    legacyClears=Object.values(legacy.levels||{}).filter(r=>r?.cleared).length;
+    const saved=localStorage.getItem(key);
+    const raw=JSON.parse(saved??localStorage.getItem(formerSharedKey)??"{}")||{};
+    if(Object.hasOwn(ARCADE_MODES,raw.mode))store.mode=raw.mode;
+    if(typeof raw.sound==="boolean")store.sound=raw.sound;
     store.high=modeNumbers(raw.high);
     for(let i=0;i<COURSES.length;i++){
       const rec=raw.levels?.[i];if(rec?.cleared!==true)continue;
       const stars=Array.isArray(rec.stars)?[...new Set(rec.stars.filter(n=>Number.isInteger(n)&&n>=0&&n<starCount(COURSES[i])))]:[];
       store.levels[i]={cleared:true,stars,best:modeNumbers(rec.best),high:modeNumbers(rec.high),secret:rec.secret===true};
     }
+    // Freeze the initial snapshot so later writes from the former shared slot stay there.
+    if(saved===null)localStorage.setItem(key,JSON.stringify(store));
   }catch{storageReady=false}
   function save(){
     try{localStorage.setItem(key,JSON.stringify(store));storageReady=true}catch{storageReady=false}
@@ -149,7 +150,6 @@
       ["蹲行 / 管口正中按住入管","<kbd>↓</kbd> / <kbd>S</kbd>"],["攀藤 / 上下移动","<kbd>↑ ↓</kbd> / <kbd>W S</kbd>"],
       ["发射火球 / 骑龙吞敌","<kbd>X</kbd> / <kbd>F</kbd>"],["主动下龙","<kbd>↓</kbd> + <kbd>X</kbd>"],["加速 / 暂停","<kbd>Shift</kbd> / <kbd>Esc</kbd>"],
     ].map(([label,keys])=>'<div class="guide-row"><strong>'+label+'</strong><span>'+keys+'</span></div>').join("");
-    const old=legacyClears?'<p class="legacy-note">上一版已通关 '+legacyClears+' / 8。原记录已保留，新版单独计分。</p>':'';
     showDetails("PLAYER MANUAL",`
       <div class="detail-inner"><h2 id="detail-title">操作手册</h2>
         <p>在带箭头的管口中央按住 ↓ 进入密室。爬藤时可按跳跃键离开。手机的方向键与动作键可以同时按。</p>
@@ -165,7 +165,7 @@
           <div><img src="./assets/sprites/lakitu-throw.png" alt="">云龟会跟着玩家换高度，并多次投卵。刺龟扎脚，可用火球、龟壳或无敌星。</div>
           <div><img src="./assets/sprites/bullet-bill.png" alt="">炮口先亮再平射。可以跳踩炮弹，靠近炮口能止射。</div>
           <div><i class="ico crown"></i>库霸喷出高低火焰，地面会预告重跳落点。落地和撞墙冒星时可反击。</div>
-        </div>${old}
+        </div>
       </div>`);
   }
   function setMode(mode){if(!Object.hasOwn(ARCADE_MODES,mode))return;store.mode=mode;save();renderProgress()}
