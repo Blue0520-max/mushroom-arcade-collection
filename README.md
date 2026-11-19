@@ -9,7 +9,7 @@
 | V1 · 初代冒险 | 踩弹簧、踢龟壳、搭升降台。每关藏有三枚星币，适合熟悉四个世界和库霸的招式。 | [V1 目录](v1/) · [操作与关卡](v1/README.md) |
 | V2 · 密室与火球 | 新增长关卡、八间管道密室、蹲行、攀藤和火焰花。蓝星加分，彩虹金星提供十秒无敌。触旗后每余一秒加 50 分。 | [V2 目录](v2/) · [操作与计分](v2/README.md) |
 | V3 · 渡船、炮舰与王座 | 换乘晶湖渡船、在倒悬矿井折返开闸，借风登上炮舰，迎战连续起跳和喷火的库霸。 | [V3 原版试玩](https://blue0520-max.github.io/mushroom-arcade-collection/v3-original/index.html) · [关卡与操作](v3-original/README.md) |
-| V4 · 渡船、炮舰与王座 | 基于 V3 的增强版。骑宠物龙吞怪，躲开炸弹龟、鬼火和更长的旋转火球。云龟追得更久，炮弹塔射得更勤。 | [V4 试玩](https://blue0520-max.github.io/mushroom-arcade-collection/v3/index.html) · [关卡与操作](v3/README.md) |
+| V4 · 渡船、炮舰与王座 | V3修改增强。骑宠物龙吞怪，躲开炸弹龟、鬼火和更长的旋转火球。云龟追得更久，炮弹塔射得更勤。 | [V4 试玩](https://blue0520-max.github.io/mushroom-arcade-collection/v3/index.html) · [关卡与操作](v3/README.md) |
 
 ## 开始游玩
 
