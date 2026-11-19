@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#faf6e9">
+  <meta name="description" content="在四个像素世界中奔跑、寻宝，挑战库克。八个原创关卡，支持键盘和触屏游玩。">
+  <title>蘑菇街机厅 · 超级玛丽 II</title>
+  <link rel="icon" href="./assets/ui/mushroom.png" type="image/png">
+  <link rel="preload" as="image" href="./assets/art/cover.webp">
+  <link rel="stylesheet" href="./style.css">
+  <script defer src="./js/courses.js"></script>
+  <script defer src="./js/engine.js"></script>
+  <script defer src="./js/renderer.js"></script>
+  <script defer src="./js/app.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap head-inner">
+      <a class="brand" href="#lobby" aria-label="蘑菇街机厅首页">
+        <img src="./assets/ui/mushroom.png" alt="" width="43" height="40">
+        <span><strong>蘑菇街机厅</strong><small>MUSHROOM ARCADE</small></span>
+      </a>
+      <nav aria-label="主导航">
+        <a class="nav-item current" href="#lobby" data-nav="lobby"><i class="ico pad"></i>冒险大厅</a>
+        <a class="nav-item" href="#worlds" data-nav="worlds"><i class="ico map"></i>世界选择</a>
+        <button class="nav-item" data-open-guide><i class="ico book"></i>操作手册</button>
+      </nav>
+      <button class="sound-button" data-sound type="button" aria-pressed="true"><i class="ico speaker"></i><span>声音开启</span></button>
+    </div>
+  </header>
+  <main class="wrap" id="lobby">
+    <section class="cartridge" aria-labelledby="game-title">
+      <div class="cover">
+        <div class="cover-art" aria-hidden="true"></div>
+        <div class="cover-sprites" aria-hidden="true">
+          <img class="poster-mario" src="./assets/sprites/fire-jump.png" alt="">
+          <img class="poster-flower" src="./assets/sprites/fire-flower.png" alt="">
+          <img class="poster-coin c1" src="./assets/sprites/coin.png" alt="">
+          <img class="poster-coin c2" src="./assets/sprites/coin.png" alt="">
+          <img class="poster-coin c3" src="./assets/sprites/coin.png" alt="">
+          <img class="poster-block" src="./assets/sprites/question.png" alt="">
+          <span class="glint g1"></span><span class="glint g2"></span>
+        </div>
+        <div class="cover-copy">
+          <div class="cover-kicker"><span></span> SUPER MARIO ADVENTURE II</div>
+          <h1 id="game-title"><img src="./assets/ui/title.png" alt="超级玛丽"></h1>
+          <p class="cover-subtitle">蘑菇王国大冒险</p>
+          <p class="cover-desc">攀上云顶，潜入密室，用火球闯过库克的熔岩城堡。</p>
+          <div class="cover-actions">
+            <button class="pixel-button primary" id="start-game"><i class="ico play"></i><span>开始冒险</span></button>
+            <button class="pixel-button ghost" data-open-guide><span class="key-icon" aria-hidden="true">?</span>玩法指南</button>
+          </div>
+        </div>
+        <span class="cover-corner" aria-hidden="true"></span>
+      </div>
+      <div class="readouts" aria-label="冒险记录">
+        <div class="readout"><span class="stat-icon"><i class="ico map"></i></span><span><small>冒险世界</small><strong><b>04</b> <em>个世界</em></strong></span></div>
+        <div class="readout"><span class="stat-icon"><i class="ico flag"></i></span><span><small>关卡进度</small><strong><b id="clears">00</b> <em>/ 08</em></strong></span></div>
+        <div class="readout"><span class="stat-icon"><i class="ico star"></i></span><span><small>积分星图鉴</small><strong><b id="stars">00</b> <em id="star-total"></em></strong></span></div>
+        <div class="readout"><span class="stat-icon"><i class="ico crown"></i></span><span><small>冒险最高分</small><strong><b id="best-score">000000</b></strong></span></div>
+      </div>
+    </section>
+    <section class="world-section" id="worlds" aria-labelledby="world-title">
+      <div class="section-bar">
+        <div class="section-heading"><span class="section-mark" aria-hidden="true"></span><h2 id="world-title">世界选择</h2><small class="latin">WORLD SELECT</small></div>
+        <label class="difficulty"><i class="ico stairs"></i><span>难度</span><select aria-label="游玩难度" data-difficulty><option value="relaxed">休闲</option><option value="classic">经典</option><option value="expert">专家</option></select></label>
+      </div>
+      <div id="world-grid" class="world-grid"></div>
+    </section>
+    <footer><span><i class="save-dot"></i><span id="save-status">冒险进度自动保存在此浏览器</span></span><span class="latin">MUSHROOM ARCADE</span></footer>
+  </main>
+  <dialog id="details" class="details-dialog">
+    <div class="modal-top"><span id="detail-label" class="latin">WORLD SELECT</span><button class="square-button close-x" id="close-details" aria-label="关闭">×</button></div>
+    <div id="detail-body"></div>
+  </dialog>
+  <dialog id="game" class="game-dialog" aria-labelledby="playing-title">
+    <div class="game-shell">
+      <div class="game-top">
+        <div class="game-identity"><img src="./assets/ui/mushroom.png" alt=""><div><small class="latin" id="world-code"></small><strong id="playing-title"></strong></div></div>
+        <div class="game-controls"><button data-sound class="square-button" aria-label="切换声音"><i class="ico speaker"></i></button><button id="fullscreen" class="square-button" aria-label="切换全屏"><span class="expand-icon"></span></button><button id="pause" class="square-button pause-button" aria-label="暂停游戏"><b>Ⅱ</b></button></div>
+      </div>
+      <div class="game-hud">
+        <div class="hud-player"><span class="hearts" id="hearts" aria-label="体力"></span><span id="form-status"></span></div>
+        <div class="hud-right"><span class="score-read"><small>SCORE</small><b id="live-score">000000</b></span><span aria-label="金币"><i class="ico coin"></i><b id="gold-count">00</b></span><span aria-label="积分星"><i class="ico star"></i><b id="star-count">0</b></span><span class="time-read"><small>TIME</small><b id="timer">000</b></span></div>
+      </div>
+      <div class="stage" id="stage">
+        <canvas id="screen" width="480" height="270" aria-label="超级玛丽横版跳跃游戏画面"></canvas>
+        <div class="boss-meter" id="boss-meter" hidden><div><strong>库克</strong> <small class="latin">BOSS</small></div><div id="boss-pips"></div></div>
+        <div class="hint" id="game-hint" role="status"></div>
+        <div class="settle-banner" id="settle-banner" hidden></div>
+        <section class="stage-overlay" id="overlay" hidden aria-live="polite"></section>
+      </div>
+      <div class="game-lower">
+        <div class="keyboard-strip"><span><kbd>← →</kbd> 移动</span><span><kbd>Space</kbd> 跳跃</span><span><kbd>↓</kbd> 蹲 / 钻管</span><span><kbd>↑</kbd> 攀藤</span><span><kbd>X</kbd> 火球</span><span><kbd>Shift</kbd> 跑</span><span><kbd>Esc</kbd> 暂停</span></div>
+        <div class="touch-strip" aria-label="触屏游戏按键"><div class="touch-directions"><button data-control="left" aria-label="向左移动">◀</button><button data-control="down" aria-label="蹲下或进入管道">▼</button><button data-control="up" aria-label="攀藤或跳跃">▲</button><button data-control="right" aria-label="向右移动">▶</button></div><div><button class="run-control" data-control="run">跑</button><button class="fire-control" data-control="fire" aria-label="发射火球">火球</button><button class="jump-control" data-control="jump">跳跃</button></div></div>
+      </div>
+    </div>
+  </dialog>
+  <noscript>请启用 JavaScript 进入蘑菇街机厅。</noscript>
+</body>
+</html>

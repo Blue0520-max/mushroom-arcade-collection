@@ -1,0 +1,70 @@
+:root {
+  color-scheme: dark;
+  font-family: system-ui, "Microsoft YaHei", "PingFang SC", sans-serif;
+  background: #0a231e;
+  color: #f7f5db;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: radial-gradient(ellipse at 50% 0, #153e32, #0a231e 65%);
+}
+
+.shell { width: min(1120px, 100% - 40px); margin: auto; padding: 32px 0 24px; }
+.hero {
+  min-height: 392px;
+  display: grid;
+  justify-items: start;
+  align-content: center;
+  padding: 38px clamp(24px, 5vw, 67px);
+  border: 1px solid #52816a;
+  border-bottom: 4px solid #c4ed86;
+  background:
+    linear-gradient(90deg, #081e1aed 2%, #081e1aca 43%, #081e1a28 82%),
+    url("./v3/assets/art/cover.webp") center / cover;
+}
+
+.eyebrow { margin: 0 0 14px; font-weight: 750; letter-spacing: .18em; color: #daf4aa; }
+h1 { margin: 0; font-size: clamp(2rem, 6vw, 4rem); line-height: 1.12; text-wrap: balance; }
+h1 span { color: #ffde83; }
+.intro { margin: 17px 0 23px; color: #f1f5e1; max-width: 27em; line-height: 1.65; }
+.start {
+  color: #132b1e;
+  background: #d5f694;
+  padding: 12px 19px;
+  border-bottom: 3px solid #82b54e;
+  text-decoration: none;
+  font-weight: 800;
+}
+.start span { padding-inline-start: .45em; }
+.start:hover { background: #ebffc4; }
+h2 { font-size: 1.25rem; margin: 29px 0 13px; }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.card {
+  display: flex;
+  flex-direction: column;
+  color: inherit;
+  background: #153a31;
+  border: 1px solid #436d59;
+  text-decoration: none;
+}
+.card:hover { border-color: #d5f694; background: #1b463a; }
+.card img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 1; object-fit: cover; }
+.card-copy { display: flex; flex-direction: column; flex: 1; padding: 16px 19px; }
+.version { color: #d5f694; font: 750 .82rem ui-monospace, monospace; }
+h3 { margin: 5px 0; font-size: 1.21rem; }
+.card p { margin: 0 0 13px; color: #cbded2; line-height: 1.6; }
+.action { color: #ffde83; margin-top: auto; font-size: .9rem; font-weight: 700; }
+a:focus-visible { outline: 3px solid #ffde83; outline-offset: 4px; }
+footer { margin-top: 20px; color: #c1d6c9; font-size: .9rem; }
+
+@media (max-width: 670px) {
+  .shell { width: calc(100% - 28px); padding-top: 14px; }
+  .hero { min-height: 330px; background-position: center, 62% center; }
+  .hero h1 span { display: block; }
+  .grid { grid-template-columns: 1fr; }
+  .card { display: grid; grid-template-columns: minmax(74px, 28%) 1fr; }
+  .card img { height: 100%; aspect-ratio: auto; }
+  .card-copy { padding: 12px 14px; }
+}
