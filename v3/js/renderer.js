@@ -158,6 +158,13 @@
     block(r,cam){
       const y=r.y*T-(r.bump>0?Math.sin(r.bump/.18*Math.PI)*3:0),x=r.x*T-cam;
       if(x<-17||x>W)return;
+      if(!r.used&&r.type==="dragon"){
+        this.box(x,y,16,16,"#503346");
+        this.box(x+1,y+1,14,14,"#dc9a43");this.box(x+2,y+2,12,1,"#ffe4a0");
+        this.line([[x+7,y+4],[x+9,y+4],[x+11,y+8],[x+11,y+11],[x+9,y+13],[x+6,y+13],[x+4,y+11],[x+4,y+8]],"#faedcc");
+        this.box(x+6,y+7,2,2,"#ab6394");this.box(x+8,y+10,2,2,"#ab6394");
+        return;
+      }
       if(!r.used){this.sprite(r.type==="brick"?"brick":"question",x+8,y+16,16,16);return}
       this.box(x,y,16,16,"#543e41");this.box(x+1,y+1,14,13,"#b28866");this.box(x+2,y+2,12,1,"#c69d74");
       for(const dx of [2,12])for(const dy of [3,11])this.box(x+dx,y+dy,2,2,"#795b51");
@@ -368,6 +375,8 @@
         if(run)for(let j=0;j<3;j++)this.box(bx-b.dir*(19+j*4),by-4+(j%2),3,2,"#f1bd7d");
       }
       for(const f of game.flames)this.sprite("flame",f.x*T-cam,f.y*T+4+Math.sin(now*15+f.age),24,8,f.dir>0);
+      window.ArcadeHazards.draw(this,game,cam);
+      window.ArcadeDragon.draw(this,game,cam);
       const p=game.player;
       if(game.fallDelay>0||(p.invuln>0&&p.invuln<.7&&Math.floor(now*9)%2&&!game.pipeTrip))return;
       const sliding=game.state==="tally"&&game.tally.age<.68;
@@ -379,7 +388,7 @@
         (p.form==="super"?"mario":p.form)+"-"+(!p.grounded&&!p.climbing?"jump":moving?"run"+(1+Math.floor(p.stride*1.8)%3):"idle");
       const w=name==="fire-throw"?27:p.form==="small"?15:17;
       const h=p.duck?(p.form==="small"?11:16):p.form==="small"?16:28;
-      const px=p.x*T-cam,base=p.y*T,trip=game.pipeTrip,c=this.ctx;
+      const px=p.x*T-cam,base=p.y*T-window.ArcadeDragon.riderOffset(game),trip=game.pipeTrip,c=this.ctx;
       let shift=0;c.save();
       if(trip&&trip.lip!==null){
         c.beginPath();c.rect(-50,-1500,W+100,1500+trip.lip*T);c.clip();

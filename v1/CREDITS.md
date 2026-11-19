@@ -2,9 +2,9 @@
 
 ## 用户提供的素材
 
-马里奥、栗宝宝、绿龟、库克、金币、龟壳与砖块主要取自 `resources/graphics/` 中的 `mario_bros.png`、`smb_enemies_sheet.png`、`item_objects.png` 和 `tile_set.png`。部分道具来自提供的爱给网图片素材。游戏使用透明裁切、统一调色和像素描边后的 PNG，位于 `assets/sprites/`。
+马里奥、栗宝宝、绿龟、库霸、金币、龟壳与砖块主要取自 `resources/graphics/` 中的 `mario_bros.png`、`smb_enemies_sheet.png`、`item_objects.png` 和 `tile_set.png`。部分道具来自提供的爱给网图片素材。游戏使用透明裁切、统一调色和像素描边后的 PNG，位于 `assets/sprites/`。
 
-跳跃、踩踏、金币、顶砖、蘑菇、火球等音效来自 `resources/sound/`，草甸主题曲和两种通关音来自 `resources/music/`。洞窟、云顶、城堡及库克战的循环短曲由网页用 Web Audio 实时合成。西文字体采用素材包中的 `Fixedsys500c.ttf`。
+跳跃、踩踏、金币、顶砖、蘑菇、火球等音效来自 `resources/sound/`，草甸主题曲和两种通关音来自 `resources/music/`。洞窟、云顶、城堡及库霸战的循环短曲由网页用 Web Audio 实时合成。西文字体采用素材包中的 `Fixedsys500c.ttf`。
 
 马里奥系列的角色、名称及原作素材属于各自权利人。随包提供的文件中没有这些原作素材的公开再发布授权。
 

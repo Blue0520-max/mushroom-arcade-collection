@@ -8,7 +8,7 @@
     {name:"青葱草甸",image:"meadow",rank:"入门",tag:"#c9e4a3",caption:"草台跳跃 · 弹簧花园",blurb:"从金币指引的第一跳出发，借花园里的红弹簧跃上藏有星币的草台。"},
     {name:"辉光晶洞",image:"cavern",rank:"进阶",tag:"#d8c8ed",caption:"晶石摆渡 · 碎台连跳",blurb:"乘升降台穿过发光的晶湖。脚下的裂纹石板开始颤动时，就是起跳的信号。"},
     {name:"云顶风车",image:"sky",rank:"挑战",tag:"#f5d69c",caption:"空中摆渡 · 云海双路线",blurb:"飞龟守着风车岛的航线。沿低处的云桥稳步前进，或借弹簧跃进上层航道。"},
-    {name:"熔岩城堡",image:"castle",rank:"BOSS",tag:"#f4b5a4",caption:"熔炉机关 · 库克决战",blurb:"越过熔炉巡廊，在王座前迎战库克。看准它的冲锋方向，利用撞墙后的破绽。"},
+    {name:"熔岩城堡",image:"castle",rank:"BOSS",tag:"#f4b5a4",caption:"熔炉机关 · 库霸决战",blurb:"越过熔炉巡廊，在王座前迎战库霸。看准它的冲锋方向，利用撞墙后的破绽。"},
   ];
   const pad=n=>String(n).padStart(2,"0");
   const clock=n=>Math.floor(n/60)+":"+pad(Math.floor(n)%60);
@@ -144,7 +144,7 @@
       ["加速奔跑","<kbd>Shift</kbd>　或　<kbd>K</kbd>"],
       ["暂停 / 继续","<kbd>Esc</kbd>　或　<kbd>P</kbd>"],
     ].map(([label,keys])=>'<div class="guide-row"><strong>'+label+'</strong><span>'+keys+'</span></div>').join("");
-    showDetails("PLAYER MANUAL",'<div class="detail-inner"><h2 id="detail-title">操作手册</h2><p>到达每关右侧的金旗即可过关。触屏可同时按住方向与跳跃键，横屏能看见更大的画面。</p><div class="guide-rows">'+rows+'</div><div class="guide-tips"><div><i class="ico flag"></i>点亮中途旗后，失足会从旗旁重来。</div><div><i class="ico star"></i>每关藏有三枚星币，通关后计入收藏，可分次收齐。</div><div><i class="ico heart"></i>休闲 / 经典 / 专家分别有 5 / 3 / 2 颗心。撞问号砖找蘑菇即可补血。</div><div><i class="ico crown"></i>跳过库克的火球和冲锋。它撞墙晕眩时，跳起来踩头。</div></div></div>');
+    showDetails("PLAYER MANUAL",'<div class="detail-inner"><h2 id="detail-title">操作手册</h2><p>到达每关右侧的金旗即可过关。触屏可同时按住方向与跳跃键，横屏能看见更大的画面。</p><div class="guide-rows">'+rows+'</div><div class="guide-tips"><div><i class="ico flag"></i>点亮中途旗后，失足会从旗旁重来。</div><div><i class="ico star"></i>每关藏有三枚星币，通关后计入收藏，可分次收齐。</div><div><i class="ico heart"></i>休闲 / 经典 / 专家分别有 5 / 3 / 2 颗心。撞问号砖找蘑菇即可补血。</div><div><i class="ico crown"></i>跳过库霸的火球和冲锋。它撞墙晕眩时，跳起来踩头。</div></div></div>');
   }
   function setMode(mode){if(!Object.hasOwn(ARCADE_MODES,mode))return;store.mode=mode;save();renderProgress()}
   document.querySelector(".difficulty select").addEventListener("change",e=>setMode(e.target.value));
@@ -211,7 +211,7 @@
       save();renderProgress();
       const final=game.index===COURSES.length-1;
       const body=slot(game.index)+" · "+game.course.name+"<br>星币 "+payload.stars.length+"/3　·　金币 "+payload.coins+"　·　用时 "+clock(payload.time);
-      overlayCard(final?"crown":"flag",final?"库克已被击败！":"关卡通关！",body,final?[["返回大厅",leave],["再战库克",()=>launch(game.index)]]:[["进入下一关",()=>launch(game.index+1)],["重玩本关",()=>launch(game.index)],["返回大厅",leave]]);
+      overlayCard(final?"crown":"flag",final?"库霸已被击败！":"关卡通关！",body,final?[["返回大厅",leave],["再战库霸",()=>launch(game.index)]]:[["进入下一关",()=>launch(game.index+1)],["重玩本关",()=>launch(game.index)],["返回大厅",leave]]);
     }
   }
   function resetClock(){lastFrame=0;accumulator=0}

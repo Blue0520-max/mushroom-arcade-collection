@@ -8,7 +8,7 @@
     {name:"青葱草甸",image:"meadow",rank:"入门",tag:"#c9e4a3",caption:"花田岔路 · 弹簧果棚",blurb:"沿田埂跑过花管，或登上树冠收集蓝星。果园深处的断崖，要靠弹簧把你送上另一层。"},
     {name:"辉光晶洞",image:"cavern",rank:"进阶",tag:"#d8c8ed",caption:"晶湖换船 · 折返开闸",blurb:"在晶湖码头找准船头和靠岸时机。进入矿井后，跟着琥珀灯向高处折返，扳动绞盘再过闸。"},
     {name:"云顶风车",image:"sky",rank:"挑战",tag:"#f5d69c",caption:"上升风柱 · 炮舰编队",blurb:"邮路的风柱能托住空中的马里奥，云龟会追着投卵。另一条航线跨过整列飞船，高低炮口各守一层。"},
-    {name:"熔岩城堡",image:"castle",rank:"BOSS",tag:"#f4b5a4",caption:"双闸熔炉 · 王座攻防",blurb:"读懂炉门上的单杠和双杠，依次开启两道闸。到了王座，要读准库克的跳跃落点和高低火焰。"},
+    {name:"熔岩城堡",image:"castle",rank:"BOSS",tag:"#f4b5a4",caption:"双闸熔炉 · 王座攻防",blurb:"读懂炉门上的单杠和双杠，依次开启两道闸。到了王座，要读准库霸的跳跃落点和高低火焰。"},
   ];
   const pad=n=>String(n).padStart(2,"0");
   const clock=n=>Math.floor(n/60)+":"+pad(Math.floor(n)%60);
@@ -147,10 +147,26 @@
     const rows=[
       ["左右移动","<kbd>← →</kbd> / <kbd>A D</kbd>"],["跳跃 · 长按跳高","<kbd>Space</kbd> / <kbd>J</kbd>"],
       ["蹲行 / 管口正中按住入管","<kbd>↓</kbd> / <kbd>S</kbd>"],["攀藤 / 上下移动","<kbd>↑ ↓</kbd> / <kbd>W S</kbd>"],
-      ["发射火球（取得火焰花后）","<kbd>X</kbd> / <kbd>F</kbd>"],["加速 / 暂停","<kbd>Shift</kbd> / <kbd>Esc</kbd>"],
+      ["发射火球 / 骑龙吞敌","<kbd>X</kbd> / <kbd>F</kbd>"],["主动下龙","<kbd>↓</kbd> + <kbd>X</kbd>"],["加速 / 暂停","<kbd>Shift</kbd> / <kbd>Esc</kbd>"],
     ].map(([label,keys])=>'<div class="guide-row"><strong>'+label+'</strong><span>'+keys+'</span></div>').join("");
     const old=legacyClears?'<p class="legacy-note">上一版已通关 '+legacyClears+' / 8。原记录已保留，新版单独计分。</p>':'';
-    showDetails("PLAYER MANUAL",'<div class="detail-inner"><h2 id="detail-title">操作手册</h2><p>管口上的箭头指向隐藏房间。爬藤时按跳跃键离藤，空中可改变方向。手机的方向键与动作键可同时按。</p><div class="guide-rows">'+rows+'</div><div class="guide-tips"><div><img src="./assets/sprites/fire-flower.png" alt="">蘑菇变大，可顶碎砖。吃花后能发射弹跳火球，同时最多两发。</div><div><img src="./assets/sprites/score-star.png" alt="">蓝色积分星每枚 1000 分，通关会登记收集位置。</div><div><img src="./assets/sprites/invincible-star.png" alt="">彩虹金星藏在少数问号砖里。十秒内可撞倒敌人和食人花。</div><div><i class="ico flag"></i>连续踩敌、龟壳连击会加分。高位触旗最高 5000 分，每秒余时另加 50 分。</div><div><img src="./assets/sprites/hammer-bro-throw.png" alt="">锤子兄弟会先举锤再抛出弧线，可踩头或用火球。</div><div><img src="./assets/sprites/lakitu-throw.png" alt="">云龟投下的刺卵碰到平台会孵化。刺龟扎脚，可用火球、龟壳或无敌星。</div><div><img src="./assets/sprites/bullet-bill.png" alt="">炮口先闪光再平射。可以跳踩炮弹，靠近炮口能止射。</div><div><i class="ico crown"></i>库克喷出高低火焰，地面会预告重跳落点。落地和撞墙冒星时可反击。</div></div>'+old+'</div>');
+    showDetails("PLAYER MANUAL",`
+      <div class="detail-inner"><h2 id="detail-title">操作手册</h2>
+        <p>在带箭头的管口中央按住 ↓ 进入密室。爬藤时可按跳跃键离开。手机的方向键与动作键可以同时按。</p>
+        <div class="guide-rows">${rows}</div>
+        <div class="guide-tips">
+          <div><img src="./assets/sprites/fire-flower.png" alt="">先吃蘑菇变大，再吃火焰花。火球会顺着斜坡弹跳，同时最多两发。</div>
+          <div><i class="ico heart"></i>顶出龙蛋砖里的宠物龙，从上方落到背上。骑乘时用 X 吞掉正前方的小怪。受击时宠物龙会逃跑，并替你挡下这次伤害。</div>
+          <div><i class="ico stairs"></i>炸弹龟靠近后会亮起引信，可用火球提前引爆。城堡里的蓝色鬼火从熔岩直上直下，等落回去再过。</div>
+          <div><img src="./assets/sprites/score-star.png" alt="">蓝色积分星每枚 1000 分，通关会登记收集位置。</div>
+          <div><img src="./assets/sprites/invincible-star.png" alt="">彩虹金星藏在少数问号砖里。十秒内可撞倒敌人和食人花。</div>
+          <div><i class="ico flag"></i>连续踩敌、龟壳连击会加分。高位触旗最高 5000 分，每秒余时另加 50 分。</div>
+          <div><img src="./assets/sprites/hammer-bro-throw.png" alt="">锤子兄弟会先举锤再抛出弧线，可踩头或用火球。</div>
+          <div><img src="./assets/sprites/lakitu-throw.png" alt="">云龟会跟着玩家换高度，并多次投卵。刺龟扎脚，可用火球、龟壳或无敌星。</div>
+          <div><img src="./assets/sprites/bullet-bill.png" alt="">炮口先亮再平射。可以跳踩炮弹，靠近炮口能止射。</div>
+          <div><i class="ico crown"></i>库霸喷出高低火焰，地面会预告重跳落点。落地和撞墙冒星时可反击。</div>
+        </div>${old}
+      </div>`);
   }
   function setMode(mode){if(!Object.hasOwn(ARCADE_MODES,mode))return;store.mode=mode;save();renderProgress()}
   document.querySelector(".difficulty select").addEventListener("change",e=>setMode(e.target.value));
@@ -168,15 +184,20 @@
     const count=g.starIds.length,activeBoss=g.areaName==="main"&&g.boss&&g.boss.phase!=="waiting"&&!g.bossDown;
     const remain=Math.ceil(g.remaining),power=Math.ceil(g.starTime);
     const opened=g.switches.filter(k=>k.on).length;
-    const sig=[opened,activeBoss?g.boss.phase:"",g.health,g.gold,count,remain,g.totalScore,g.player.form,power,g.areaName,g.state,activeBoss?g.boss.hp:"-"].join("/");
+    const mounted=g.player.mounted;
+    const sig=[opened,activeBoss?g.boss.phase:"",g.health,g.gold,count,remain,g.totalScore,g.player.form,mounted,power,g.areaName,g.state,activeBoss?g.boss.hp:"-"].join("/");
     if(sig===hudKey)return;hudKey=sig;
     $("hearts").innerHTML=Array.from({length:g.mode.hearts},(_,i)=>'<i class="ico heart'+(i<g.health?'':' empty-heart')+'"></i>').join("");
     $("hearts").setAttribute("aria-label","体力 "+g.health+" / "+g.mode.hearts);
     $("gold-count").textContent=pad(g.gold);$("star-count").textContent=count+"/"+g.starTotal;
     $("timer").textContent=String(remain).padStart(3,"0");$("timer").classList.toggle("urgent",g.lowTime);
     $("live-score").textContent=formatted(g.totalScore);
-    $("form-status").textContent=power?"无敌 "+power+"s":({small:"小马里奥",super:"超级",fire:"火焰"})[g.player.form];
+    const form=power?"无敌 "+power+"s":({small:"小马里奥",super:"超级",fire:"火焰"})[g.player.form];
+    $("form-status").textContent=mounted?form+" · 骑龙":form;
     $("form-status").classList.toggle("powered",g.player.form==="fire"||power>0);
+    const action=playDialog.querySelector(".fire-control");
+    action.textContent=mounted?"吞敌":"火球";
+    action.setAttribute("aria-label",mounted?"让宠物龙吞敌":"发射火球");
     $("world-code").textContent="WORLD "+slot(g.index)+"  /  "+g.mode.name+(g.switches.length?"  ·  开闸 "+opened+"/"+g.switches.length:"");
     $("playing-title").textContent=g.areaName==="secret"?g.course.name:g.level.name;
     const tally=$("settle-banner");tally.hidden=g.state!=="tally";
@@ -236,7 +257,7 @@
       const body=slot(game.index)+" · "+game.level.name+"　|　积分星 "+payload.stars.length+"/"+game.starTotal+
         '<br>冒险 '+payload.action+'　＋　触旗 '+payload.flag+'　＋　余时 '+payload.seconds+' × 50'+
         '<br><strong class="result-score">本关 '+formatted(payload.score)+' 分</strong>　行程累计 '+formatted(payload.total)+' 分';
-      overlayCard(final?"crown":"flag",final?"库克已被击败！":"关卡通关！",body,final?[["返回大厅",leave],["重玩本关",()=>launch(game.index)]]:[["进入下一关",()=>launch(game.index+1,{score:payload.total,form:game.player.form})],["重玩本关",()=>launch(game.index)],["返回大厅",leave]]);
+      overlayCard(final?"crown":"flag",final?"库霸已被击败！":"关卡通关！",body,final?[["返回大厅",leave],["重玩本关",()=>launch(game.index)]]:[["进入下一关",()=>launch(game.index+1,{score:payload.total,form:game.player.form})],["重玩本关",()=>launch(game.index)],["返回大厅",leave]]);
     }
   }
   function resetClock(){lastFrame=0;accumulator=0}

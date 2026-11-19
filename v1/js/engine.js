@@ -218,7 +218,7 @@
       const b=this.boss,p=this.player;
       if(!b||this.bossDown)return;
       if(b.phase==="waiting"){
-        if(p.x>=b.left+.6){this.bossPhase("inhale",1.5,"库克正在吸气，准备越过火球！");this.emit("bossStart")}
+        if(p.x>=b.left+.6){this.bossPhase("inhale",1.5,"库霸正在吸气，准备越过火球！");this.emit("bossStart")}
         return;
       }
       b.clock-=dt;b.blink=Math.max(0,b.blink-dt);
@@ -231,7 +231,7 @@
           this.sfx("fireball");b.shots--;b.clock=1.14/Math.sqrt(this.mode.speed);
         }else{
           b.dir=p.x>=b.x?1:-1;
-          this.bossPhase("brace",1.18/Math.sqrt(this.mode.speed),"库克准备冲锋！跳过它，等它撞墙。");
+          this.bossPhase("brace",1.18/Math.sqrt(this.mode.speed),"库霸准备冲锋！跳过它，等它撞墙。");
         }
       }else if(b.phase==="brace" && b.clock<=0)this.bossPhase("charge",8);
       else if(b.phase==="charge"){
@@ -239,17 +239,17 @@
         if(b.x<b.left+1.1 || b.x>b.right-1.1){
           b.x=clamp(b.x,b.left+1.1,b.right-1.1);this.shake=.3;this.sfx("bump");
           this.burst(b.x,12.2,["#ffc66a","#fff2c4","#d47148"],18);
-          this.bossPhase("stunned",this.modeId==="expert"?3.05:4.0,"库克晕了！现在跳起来踩头！");
+          this.bossPhase("stunned",this.modeId==="expert"?3.05:4.0,"库霸晕了！现在跳起来踩头！");
         }
-      }else if(b.phase==="stunned" && b.clock<=0)this.bossPhase("inhale",1.05,"库克再次吸气，准备跳跃！");
-      else if(b.phase==="recover" && b.clock<=0)this.bossPhase("inhale",1.25,"库克再次吸气，准备跳跃！");
+      }else if(b.phase==="stunned" && b.clock<=0)this.bossPhase("inhale",1.05,"库霸再次吸气，准备跳跃！");
+      else if(b.phase==="recover" && b.clock<=0)this.bossPhase("inhale",1.25,"库霸再次吸气，准备跳跃！");
       const bh=b.phase==="stunned"?1.28:1.95;
       if(b.blink<=0 && pairHit(p.x,p.y,.78,HEIGHT,b.x,b.y,1.78,bh)){
         if(b.phase==="stunned" && p.vy>=0 && oldY<=b.y-bh+.36){
           b.hp--;b.blink=1.2;p.invuln=Math.max(.9,p.invuln);p.y=b.y-bh;p.vy=-12.3;p.grounded=false;p.stand=null;p.coyote=0;
           this.sfx("stomp");this.shake=.26;this.burst(b.x,b.y-1,["#fff7c4","#ffc34f","#f38950"],20);
-          if(b.hp===0){this.bossDown=true;this.flames=[];this.sfx("powerup");this.hint("库克落败！去右侧金旗领取胜利。",4)}
-          else this.bossPhase("recover",1.5,"命中！库克还剩 "+b.hp+" 格体力");
+          if(b.hp===0){this.bossDown=true;this.flames=[];this.sfx("powerup");this.hint("库霸落败！去右侧金旗领取胜利。",4)}
+          else this.bossPhase("recover",1.5,"命中！库霸还剩 "+b.hp+" 格体力");
         }else this.hit();
       }
       for(const f of this.flames){

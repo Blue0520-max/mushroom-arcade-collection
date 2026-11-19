@@ -383,14 +383,14 @@
       if(stomp){p.invuln=Math.max(.9,p.invuln);p.y=b.y-1.28;p.vy=-12.3;p.grounded=false;p.stand=null;p.coyote=0}
       this.award(b.hp===0?5000:500,b.x,b.y-2);this.sfx("stomp");this.shake=.24;
       this.burst(b.x,b.y-1,["#fff7c4","#ffc34f","#f38950"],20);
-      if(b.hp===0){this.bossDown=true;this.flames=[];this.sfx("powerup");this.hint("库克落败！冲上右侧旗阶争取 5000 分。",3.2);this.emit("music")}
-      else this.bossPhase("recover",1.45,"命中！库克还剩 "+b.hp+" 格体力");
+      if(b.hp===0){this.bossDown=true;this.flames=[];this.sfx("powerup");this.hint("库霸落败！冲上右侧旗阶争取 5000 分。",3.2);this.emit("music")}
+      else this.bossPhase("recover",1.45,"命中！库霸还剩 "+b.hp+" 格体力");
     }
     updateBoss(dt,oldY){
       const b=this.boss,p=this.player;
       if(this.areaName!=="main"||!b||this.bossDown)return;
       if(b.phase==="waiting"){
-        if(p.x>=b.left+.6){this.bossPhase("inhale",1.5,"库克正在吸气，准备越过火球！");this.emit("music")}
+        if(p.x>=b.left+.6){this.bossPhase("inhale",1.5,"库霸正在吸气，准备越过火球！");this.emit("music")}
         return;
       }
       b.clock-=dt;b.blink=Math.max(0,b.blink-dt);
@@ -403,7 +403,7 @@
           this.sfx("fireball");b.shots--;b.clock=1.14/Math.sqrt(this.mode.speed);
         }else{
           b.dir=p.x>=b.x?1:-1;
-          this.bossPhase("brace",1.18/Math.sqrt(this.mode.speed),"库克准备冲锋！跳过它，等它撞墙。");
+          this.bossPhase("brace",1.18/Math.sqrt(this.mode.speed),"库霸准备冲锋！跳过它，等它撞墙。");
         }
       }else if(b.phase==="brace" && b.clock<=0)this.bossPhase("charge",8);
       else if(b.phase==="charge"){
@@ -411,10 +411,10 @@
         if(b.x<b.left+1.1 || b.x>b.right-1.1){
           b.x=clamp(b.x,b.left+1.1,b.right-1.1);this.shake=.3;this.sfx("bump");
           this.burst(b.x,12.2,["#ffc66a","#fff2c4","#d47148"],18);
-          this.bossPhase("stunned",this.modeId==="expert"?2.55:3.5,"库克晕了！现在踩头或用火球反击！");
+          this.bossPhase("stunned",this.modeId==="expert"?2.55:3.5,"库霸晕了！现在踩头或用火球反击！");
         }
-      }else if(b.phase==="stunned" && b.clock<=0)this.bossPhase("inhale",1.05,"库克再次吸气，准备跳跃！");
-      else if(b.phase==="recover" && b.clock<=0)this.bossPhase("inhale",1.25,"库克再次吸气，准备跳跃！");
+      }else if(b.phase==="stunned" && b.clock<=0)this.bossPhase("inhale",1.05,"库霸再次吸气，准备跳跃！");
+      else if(b.phase==="recover" && b.clock<=0)this.bossPhase("inhale",1.25,"库霸再次吸气，准备跳跃！");
       const bh=b.phase==="stunned"?1.28:1.95;
       if(b.blink<=0 && pairHit(p.x,p.y,.78,p.h,b.x,b.y,1.78,bh)){
         if(b.phase==="stunned" && p.vy>=0 && oldY<=b.y-bh+.36){

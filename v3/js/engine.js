@@ -1,5 +1,6 @@
 (() => {
   "use strict";
+  const {ArcadeDragon,ArcadeHazards}=window;
   const MODES = {
     relaxed:{name:"休闲",rank:0,hearts:5,speed:.83,grace:1.9,crumble:1.1,boss:3,clock:1.48},
     classic:{name:"经典",rank:1,hearts:3,speed:1.19,grace:1.35,crumble:.72,boss:5,clock:1},
@@ -13,6 +14,7 @@
   const ENEMY_HEIGHT={goomba:.91,spiny:.76,hammer:1.39,lakitu:1.48,koopa:1.27,wing:1.27};
   const enemyHeight=e=>e.shell ? .74 : ENEMY_HEIGHT[e.type]||1.27;
   const HALF=.39, STANDING={small:1.02,super:1.76,fire:1.76};
+  const FIREBALL_HALF=.2,FIREBALL_SPEED=13.9,FIREBALL_GRAVITY=24;
   const CHAIN_POINTS=[100,200,400,800,1000,2000,4000,8000];
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   const toward=(v,to,delta)=>v<to?Math.min(to,v+delta):Math.max(to,v-delta);
@@ -25,7 +27,7 @@
     const solids=[
       ...c.ground.map(([a,b,y=13])=>solid(a,y,b-a,Math.max(5,20-y),"ground")),
       ...c.pipes.map(([x,y,w,tag,bottom=13])=>({...solid(x,y,w,bottom-y,"pipe"),tag})),
-      ...(c.cannons||[]).map(([x,y,w,bottom,dir,minRank=0])=>({...solid(x,y,w,bottom-y,"cannon"),enabled:mode.rank>=minRank,dir,aim:dir||-1,cooldown:1.05,warning:0,flash:0})),
+      ...(c.cannons||[]).map(([x,y,w,bottom,dir,minRank=0])=>({...solid(x,y,w,bottom-y,"cannon"),enabled:mode.rank>=minRank,dir,aim:dir||-1,cooldown:.72,warning:0,flash:0})),
       ...(c.gates||[]).map(([id,x,y,w,bottom])=>({...solid(x,y,w,bottom-y,"gate"),id,gone:false})),
       ...(c.ceilings||[]).map(([x,y,w,h])=>solid(x,y,w,h,"ceiling")),
       ...c.blocks.map(([x,y,type])=>({...solid(x,y,1,1,"block"),type,used:false,bump:0})),
@@ -36,7 +38,8 @@
     const enemies=c.enemies.filter(e=>(e[4]||0)<=mode.rank).map(([x,y,type,radius],i)=>({x,y,startX:x,baseY:y,type,radius,dir:i%2?1:-1,gone:false,shell:0,chain:0,vy:0,safe:0,pace:i*.41}));
     for(const e of enemies)if(e.type==="hammer"){e.grounded=true;e.jumpWait=.75+e.pace%1.05;e.cooldown=1.05+e.pace%.56;e.aim=-1;e.warning=0}
     for(const [left,right,height,tier=0] of c.lakitus||[])if(tier<=mode.rank){
-      enemies.push({type:"lakitu",left,right,baseY:height,x:left+3,y:height,dir:1,gone:false,safe:0,cooldown:1.35,warning:0,home:left,age:0});
+      const pursuitEnd=Math.min(c.width-1,right+18+mode.rank*6);
+      enemies.push({type:"lakitu",left,right:pursuitEnd,baseY:height,x:left+3,y:height,dir:1,gone:false,safe:0,cooldown:.72,warning:0,home:left,age:0});
     }
     const switches=(c.switches||[]).map(([id,x,y])=>({id,x,y,on:false}));
     const plants=solids.filter(s=>s.tag==="plant").map((s,i)=>({x:s.x+s.w/2,y:s.y,ext:0,phase:"rest",wait:.65+i%3*.52,gone:false}));
@@ -44,7 +47,7 @@
       springs:c.springs.map(([x,y])=>({x,y,pulse:0})),
       coins:c.coins.map(([x,y])=>({x,y,got:false})),
       stars:c.stars.map(([x,y],i)=>({x,y,id:i+offset,got:false})),
-      seenSigns:new Set(),items:[],clock:0};
+      seenSigns:new Set(),items:[],dragons:ArcadeDragon.buildArea(),hazards:ArcadeHazards.buildArea(c,mode),clock:0};
   }
   class ArcadeGame{
     constructor(course,index,mode,emit=()=>{},carry={}){
@@ -57,7 +60,7 @@
     initRun(){
       this.areas={main:buildArea(this.level,this.mode,0)};
       if(this.level.secret)this.areas.secret=buildArea(this.level.secret,this.mode,this.level.stars.length);
-      this.state="playing";this.input=freshInput();this.player={form:this.initialForm};
+      this.state="playing";this.input=freshInput();this.player={form:this.initialForm,mounted:false};
       this.flagIndex=-1;this.savedFlag=null;this.score=0;this.gold=0;this.time=0;this.remaining=this.limit;
       this.health=this.mode.hearts;this.starTime=0;this.combo=0;this.secretFound=false;this.bossDown=false;this.lowTime=false;
       this.restoreAtFlag();
@@ -79,9 +82,10 @@
       this.camera=clamp(x-8.5,0,Math.max(0,this.course.width-30));this.cameraY=Math.min(0,y-8.8);
       this.combo=0;this.pipeHold=0;if(!keepInput)this.release();
     }
-    restoreAtFlag(){
+    restoreAtFlag(restoreMount=false){
       this.enterArea("main");this.pipeTrip=null;this.tally=null;this.fallDelay=0;this.shake=0;this.starTime=0;
       this.place(...(this.checkpoint?this.checkpoints[this.flagIndex]:(this.level.spawn||[2,13])));
+      ArcadeDragon.restore(this,restoreMount);
       this.boss=null;
       if(this.level.boss&&!this.bossDown){
         const {left,right}=this.level.boss;
@@ -89,11 +93,14 @@
       }
     }
     recordFlag(){
-      this.savedFlag={areas:structuredClone(this.areas),score:this.score,gold:this.gold,remaining:this.remaining,time:this.time,form:this.player.form,secret:this.secretFound};
+      this.savedFlag={areas:structuredClone(this.areas),score:this.score,gold:this.gold,remaining:this.remaining,time:this.time,form:this.player.form,mounted:this.player.mounted,secret:this.secretFound};
     }
     release(){this.input=freshInput();this.player.buffer=0}
     control(key,held){
       if(this.state!=="playing" || !(key in this.input) || this.input[key]===held)return;
+      if(key==="fire"&&held&&this.input.down&&this.player.mounted){
+        ArcadeDragon.dismount(this);this.posture();return;
+      }
       this.input[key]=held;
       if((key==="jump" || (key==="up"&&!this.nearVine()))&&held){
         this.player.buffer=.14;
@@ -110,10 +117,10 @@
     }
     setForm(form){this.player.form=form;this.posture()}
     posture(){
-      const p=this.player,tall=STANDING[p.form];
+      const p=this.player,lift=ArcadeDragon.extraHeight(this),tall=STANDING[p.form]+lift;
       const low=this.solids.some(r=>!r.gone&&(r.kind==="ceiling"||r.kind==="block")&&overlapsX(p.x,HALF,r)&&r.y<p.y-.1&&r.y+r.h>p.y-tall+.002&&r.y+r.h<=p.y-.56);
       p.duck=!p.climbing&&((this.input.down&&(p.grounded||p.duck))||low);
-      p.h=p.duck?(p.form==="small" ? .65 : .78):tall;
+      p.h=p.duck?(p.form==="small" ? .65 : .78)+lift:tall;
     }
     burst(x,y,colors,count=10,power=1) {
       for(let i=0;i<count;i++)this.particles.push({x,y,vx:(Math.random()-.5)*7*power,vy:(-1-Math.random()*5)*power,life:.24+Math.random()*.35,color:colors[i%colors.length],size:i%3===0?3:2});
@@ -146,6 +153,7 @@
         this.burst(block.x+.5,block.y+.4,["#a24c2d","#e19855","#6b3f36"],13);this.sfx("brick_smash");return;
       }
       block.used=true;
+      if(block.type==="dragon"){ArcadeDragon.spawn(this,block);return}
       if(block.type==="coin"){
         this.gold++;this.award(100,block.x+.5,block.y-.4);this.sfx("coin");this.burst(block.x+.5,block.y-.4,["#ffe198","#f5af39"],9);return;
       }
@@ -185,7 +193,10 @@
     updateClimb(dt){
       const p=this.player;
       p.climbLock=Math.max(0,p.climbLock-dt);
-      if(!p.climbing && !p.climbLock && this.input.up)p.climbing=this.nearVine();
+      if(!p.climbing && !p.climbLock && this.input.up){
+        p.climbing=this.nearVine();
+        if(p.climbing&&p.mounted)ArcadeDragon.dismount(this);
+      }
       if(!p.climbing)return false;
       const [x,top,bottom]=p.climbing,axis=Number(this.input.down)-Number(this.input.up);
       const dx=Number(this.input.right)-Number(this.input.left);
@@ -267,6 +278,10 @@
         if(floor){m.y=floor.top;m.vy=m.type==="invincible"?-7.15:0}
         if(m.y>20){m.got=true;continue}
         if(!pairHit(p.x,p.y,.78,p.h,m.x,m.y,.85,.87))continue;
+        if(m.type==="flower"&&p.form==="small"){
+          if(!m.needsMushroom)this.hint("先吃蘑菇变大，再回来拿火焰花。",2.1);
+          m.needsMushroom=true;continue;
+        }
         m.got=true;this.award(1000,m.x,m.y-.9);this.sfx("powerup");
         if(m.type==="invincible"){
           this.starTime=10;this.hint("无敌星！十秒内撞倒敌人",2.1);this.emit("music");
@@ -280,6 +295,8 @@
     hit(pit=false){
       const p=this.player;
       if(this.state!=="playing"||this.fallDelay>0||(!pit&&(p.invuln>0||this.starTime>0)))return;
+      if(pit&&p.mounted)ArcadeDragon.dismount(this);
+      if(!pit&&p.mounted&&ArcadeDragon.scatter(this)){this.posture();return}
       this.shake=.15;this.sfx("bump");
       if(!pit&&p.form!=="small"){this.setForm(p.form==="fire"?"super":"small")}
       else this.health--;
@@ -307,22 +324,53 @@
         }
       }
     }
+    moveFireball(f,x,y){
+      const oldFoot=f.y+FIREBALL_HALF,foot=y+FIREBALL_HALF;
+      let floor=Infinity,rampSpeed=0;
+      for(const r of this.surfaces){
+        if(r.gone||!overlapsX(x,FIREBALL_HALF,r)||foot<r.y-.002)continue;
+        const previousTop=r.kind==="mover"?Math.max(r.y,r.y-r.stepY):r.y;
+        if(oldFoot<=previousTop+.002)floor=Math.min(floor,r.y);
+        else if(y-FIREBALL_HALF<r.y+r.h-.002&&this.solids.includes(r)){f.gone=true;return}
+      }
+      for(const r of this.slopes){
+        if(!overlapsX(x,FIREBALL_HALF,r)||y-FIREBALL_HALF>=20)continue;
+        // The uphill edge of the hit box touches this face first.
+        const risingEdge=r.leftY<r.rightY?-FIREBALL_HALF:FIREBALL_HALF;
+        const top=slopeY(r,x+risingEdge);
+        if(foot<top-.002)continue;
+        if(oldFoot>slopeY(r,f.x+risingEdge)+.002){f.gone=true;return}
+        if(top<=floor+.002){
+          floor=Math.min(top,floor);
+          rampSpeed=(r.rightY-r.leftY)/r.w*f.dir*FIREBALL_SPEED;
+        }
+      }
+      f.x=x;f.y=y;
+      if(Number.isFinite(floor)){
+        f.y=floor-FIREBALL_HALF;
+        f.vy=Math.min(-6.9,rampSpeed-3.6);
+      }
+    }
     shoot(){
       const p=this.player;
       if(p.form!=="fire"||p.fireDelay>0||this.fireballs.length>=2||p.climbing)return;
       p.fireDelay=.26;p.throwTime=.17;
-      this.fireballs.push({x:p.x+p.face*.55,y:p.y-p.h*.57,dir:p.face,vy:-.7,age:0});
+      const f={x:p.x,y:p.y-p.h*.57,dir:p.face,vy:-.7,age:0};
+      for(let i=1;i<=4&&!f.gone;i++)this.moveFireball(f,p.x+p.face*.55*i/4,f.y);
+      this.fireballs.push(f);
       this.sfx("fireball");
     }
     updateShots(dt){
-      if(this.input.fire)this.shoot();
+      if(this.input.fire&&!this.player.mounted)this.shoot();
       for(const f of this.fireballs){
-        f.age+=dt;const oldX=f.x,oldY=f.y,dx=f.x+f.dir*13.9*dt;
-        f.x=this.wall(dx,oldX,f.y+.2,.35,.2);f.gone=f.x!==dx;
-        f.vy+=24*dt;f.y+=f.vy*dt;
-        const floor=f.vy>=0?this.support(f.x,.18,oldY+.2,f.y+.2,oldX):null;
-        if(floor){f.y=floor.top-.2;f.vy=-6.9}
-        if(this.solids.some(r=>!r.gone&&overlapsX(f.x,.18,r)&&f.y+.19>r.y+.003&&f.y-.19<r.y+r.h-.003))f.gone=true;
+        f.age+=dt;
+        const speed=Math.max(FIREBALL_SPEED,Math.abs(f.vy)+FIREBALL_GRAVITY*dt);
+        const subdivisions=Math.max(1,Math.ceil(speed*dt/(FIREBALL_HALF/2)));
+        const step=dt/subdivisions;
+        for(let i=0;i<subdivisions&&!f.gone;i++){
+          f.vy+=FIREBALL_GRAVITY*step;
+          this.moveFireball(f,f.x+f.dir*FIREBALL_SPEED*step,f.y+f.vy*step);
+        }
         for(const e of this.enemies){
           if(f.gone||e.gone||!pairHit(f.x,f.y+.2,.4,.4,e.x,e.y,.86,enemyHeight(e)))continue;
           this.defeat(e,e.type==="lakitu"?800:e.type==="hammer"?400:200,e.x,e.y);f.gone=true;
@@ -386,20 +434,24 @@
       const p=this.player,rank=this.mode.rank;
       if(p.x<e.left-2||p.x>e.right+2){e.warning=0;e.cooldown=Math.max(.9,e.cooldown);return}
       e.age+=dt;
-      const target=clamp(p.x+(p.vx<-.5?-3.8:3.8),e.left+1,e.right-1);
-      e.x=toward(e.x,target,(5.8+rank*.65)*dt);e.dir=p.x<e.x?-1:1;
-      const height=Math.min(e.baseY,p.y-3.65);
-      e.y=toward(e.y,height+Math.sin(e.age*2)*.32,3.6*dt);
-      if(Math.abs(e.x-p.x)>14||!this.onScreen(e.x,e.y-1)){e.warning=0;e.cooldown=Math.max(.7,e.cooldown);return}
+      const heading=Math.abs(p.vx)>.5?Math.sign(p.vx):p.face;
+      const target=clamp(p.x+heading*3.3,e.left+1,e.right-1);
+      e.x=toward(e.x,target,(9.5+rank*.68)*dt);e.dir=p.x<e.x?-1:1;
+      const height=Math.min(e.baseY+11,p.y-4.1);
+      e.y=toward(e.y,height+Math.sin(e.age*2)*.28,5.8*dt);
+      if(Math.abs(e.x-p.x)>14||!this.onScreen(e.x,e.y-1)){e.warning=0;e.cooldown=Math.max(.35,e.cooldown-dt);return}
       if(e.warning>0){
         e.warning=Math.max(0,e.warning-dt);
         if(!e.warning){
-          this.foeShots.push({type:"egg",x:e.x,y:e.y-.42,vx:clamp((p.x-e.x)*.55+p.vx*.12,-3,3),vy:-3.8,age:0,home:e.home});
-          e.cooldown=3.85-.69*rank;
+          const lead=p.x+p.vx*.57,speed=4.55+rank*.4;
+          this.foeShots.push({type:"egg",x:e.x,y:e.y-.42,vx:clamp((lead-e.x)*1.3,-speed,speed),vy:-3.8,age:0,home:e.home});
+          e.cooldown=2.66-.45*rank;
         }
       }else if((e.cooldown-=dt)<=0){
-        const alive=this.enemies.filter(a=>a.type==="spiny"&&a.home===e.home&&!a.gone).length+this.foeShots.filter(f=>f.type==="egg"&&f.home===e.home&&!f.gone).length;
-        if(alive<2+rank)e.warning=.82-.1*rank;else e.cooldown=.8;
+        const hatched=this.enemies.filter(a=>a.type==="spiny"&&a.home===e.home&&!a.gone);
+        const eggs=this.foeShots.filter(f=>f.type==="egg"&&f.home===e.home&&!f.gone).length;
+        const nearby=hatched.filter(a=>Math.abs(a.x-p.x)<14).length+eggs;
+        if(nearby<2+rank&&hatched.length+eggs<6+rank)e.warning=.74-.08*rank;else e.cooldown=.68;
       }
     }
     updateSpiny(e,dt){
@@ -425,14 +477,14 @@
         const armed=this.onScreen(middle,c.y+.6)&&Math.abs(dx)<15.8&&Math.abs(dx)>2.55&&Math.abs(p.y-c.y)<7.7&&candidate*dx>0;
         c.flash=Math.max(0,c.flash-dt);
         if(c.warning>0){
-          if(!armed||c.aim*dx<=0){c.warning=0;c.cooldown=.72;continue}
+          if(!armed||c.aim*dx<=0){c.warning=0;c.cooldown=.58;continue}
           c.warning=Math.max(0,c.warning-dt);
           if(!c.warning){
             const x=middle+c.aim*(c.w/2+.5);
             this.foeShots.push({type:"bullet",x,y:c.y+.64,dir:c.aim,vx:c.aim*(5.7+rank*1.05),vy:0,age:0});
-            c.flash=.16;c.cooldown=3.35-.54*rank;this.sfx("bump");
+            c.flash=.16;c.cooldown=2.72-.47*rank;this.sfx("bump");
           }
-        }else if(armed&&(c.cooldown-=dt)<=0){c.aim=candidate;c.warning=.83-.1*rank}
+        }else if(armed&&(c.cooldown-=dt)<=0){c.aim=candidate;c.warning=.73-.08*rank}
       }
     }
     updateFoeShots(dt,oldPlayerY){
@@ -560,21 +612,21 @@
       b.targetX=clamp(b.x+clamp(p.x+p.vx*.22-b.x,-reach,reach),b.left+1.1,b.right-1.1);
       b.dir=b.targetX<b.x?-1:1;b.airShot=false;
       b.flight=1.22-rank*.065;b.height=3.55+rank*.33;
-      this.bossPhase("leapWarn",.85-rank*.13,b.leaps===0?"注意地上的落点圈，库克要跳了！":undefined);
+      this.bossPhase("leapWarn",.85-rank*.13,b.leaps===0?"注意地上的落点圈，库霸要跳了！":undefined);
     }
     strikeBoss(stomp){
       const b=this.boss,p=this.player;b.hp--;b.blink=.75;
       if(stomp){p.invuln=Math.max(.8,p.invuln);p.y=b.y-1.28;p.vy=-12.3;p.grounded=false;p.stand=null;p.coyote=0}
       this.award(b.hp===0?5000:500,b.x,b.y-2);this.sfx("stomp");this.shake=.22;
       this.burst(b.x,b.y-1,["#fff7c4","#ffc34f","#f38950"],20);
-      if(b.hp===0){this.bossDown=true;this.flames=[];this.sfx("powerup");this.hint("库克落败！右侧的王旗已经升起。",3);this.emit("music")}
-      else this.bossPhase("recover",1.0-.12*this.mode.rank,b.hp===Math.ceil(b.max/2)?"库克进入急攻，留意空中的火焰！":undefined);
+      if(b.hp===0){this.bossDown=true;this.flames=[];this.sfx("powerup");this.hint("库霸落败！右侧的王旗已经升起。",3);this.emit("music")}
+      else this.bossPhase("recover",1.0-.12*this.mode.rank,b.hp===Math.ceil(b.max/2)?"库霸进入急攻，留意空中的火焰！":undefined);
     }
     updateBoss(dt,oldY){
       const b=this.boss,p=this.player,rank=this.mode.rank;
       if(this.areaName!=="main"||!b||this.bossDown)return;
       if(b.phase==="waiting"){
-        if(p.x>=b.left+.6){this.startVolley();this.hint("高焰能蹲，低焰要跳。库克落地或撞墙时可以反击。",3.4);this.emit("music")}
+        if(p.x>=b.left+.6){this.startVolley();this.hint("高焰能蹲，低焰要跳。库霸落地或撞墙时可以反击。",3.4);this.emit("music")}
         return;
       }
       b.clock-=dt;b.blink=Math.max(0,b.blink-dt);
@@ -632,6 +684,7 @@
       if(!p.grounded||!r||!["in","back"].includes(r.tag)||Math.abs(p.x-r.x-r.w/2)>.65||!this.input.down){this.pipeHold=0;return}
       this.pipeHold+=dt;
       if(this.pipeHold<.18)return;
+      if(p.mounted){ArcadeDragon.dismount(this);this.posture()}
       p.x=r.x+r.w/2;p.vx=0;this.pipeTrip={age:0,swapped:false,to:r.tag==="in"?"secret":"main",lip:r.y};
       this.sfx("pipe");p.buffer=0;
     }
@@ -660,6 +713,7 @@
     }
     touchFlag(){
       const [x,y]=this.level.goal,p=this.player;
+      if(p.mounted){ArcadeDragon.dismount(this);this.posture()}
       const high=y-p.y+p.h*.7;
       const flag=high>=4.4?5000:high>=3.5?2000:high>=2.6?800:high>=1.65?400:100;
       const seconds=Math.ceil(Math.max(0,this.remaining));
@@ -688,7 +742,7 @@
       if(s){
         this.areas=structuredClone(s.areas);this.score=s.score;this.gold=s.gold;this.remaining=s.remaining;this.time=s.time;
         this.player.form=s.form;this.secretFound=s.secret;this.health=this.mode.hearts;this.state="playing";this.bossDown=false;
-        this.lowTime=this.remaining<=this.warningAt;this.restoreAtFlag();
+        this.lowTime=this.remaining<=this.warningAt;this.restoreAtFlag(s.mounted);
       }else this.initRun();
       this.emit("resumed");this.hint(this.checkpoint?"从中途旗再次出发":"准备好，再试一次！",2);
     }
@@ -704,8 +758,9 @@
       if(this.fallDelay>0){this.fallDelay-=dt;if(this.fallDelay<=0){this.restoreAtFlag();this.emit("music")}return}
       const oldY=this.movePlayer(dt),p=this.player,c=this.course;
       if(p.y>(this.theme===3?16.3:18.3)){this.hit(true);return}
-      this.pickups(dt);this.updateSwitches();this.updatePlants(dt);this.updateShots(dt);this.updateEnemies(dt,oldY);
+      this.pickups(dt);ArcadeDragon.update(this,dt,oldY);this.updateSwitches();this.updatePlants(dt);this.updateShots(dt);this.updateEnemies(dt,oldY);
       this.updateCannons(dt);this.updateFoeShots(dt,oldY);
+      ArcadeHazards.update(this,dt,oldY);
       for(const [x,y,w] of c.spikes)if(p.x+HALF>x+.12&&p.x-HALF<x+w-.12&&p.y>y-.44&&p.y-p.h<y)this.hit();
       this.updateFirebars();if(this.state!=="playing")return;
       this.updatePipes(dt);if(this.pipeTrip)return;

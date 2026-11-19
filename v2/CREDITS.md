@@ -2,7 +2,7 @@
 
 ## 精灵与字体
 
-马里奥、栗宝宝、绿龟、库克、金币、龟壳与砖块主要来自所给素材中 `resources/graphics/` 下的 `mario_bros.png`、`smb_enemies_sheet.png`、`item_objects.png` 和 `tile_set.png`。新版裁取小马里奥、蹲姿、攀藤与滑旗动作、火焰形态、食人花、火焰花与火球动画，并为积分星和无敌星制作可辨认的蓝色与虹彩配色。部分道具来自提供的爱给网图片，西文字体使用随包的 `Fixedsys500c.ttf`。
+马里奥、栗宝宝、绿龟、库霸、金币、龟壳与砖块主要来自所给素材中 `resources/graphics/` 下的 `mario_bros.png`、`smb_enemies_sheet.png`、`item_objects.png` 和 `tile_set.png`。新版裁取小马里奥、蹲姿、攀藤与滑旗动作、火焰形态、食人花、火焰花与火球动画，并为积分星和无敌星制作可辨认的蓝色与虹彩配色。部分道具来自提供的爱给网图片，西文字体使用随包的 `Fixedsys500c.ttf`。
 
 ## 音乐与音效
 
@@ -10,7 +10,7 @@
 | --- | --- |
 | 草甸、云顶 | `resources/music/main_theme.ogg`，带有 Main Theme & Overworld 与 Koji Kondo 标签。地上关卡时间紧迫时切换至 `main_theme_sped_up.ogg`。 |
 | 地下、密室 | `DM_20261118190011_025.mp3` 中约 2.712 至 15.309 秒的地下主题循环，保留原录音的 11025 Hz 立体声。 |
-| 城堡、库克 | `DM_20261118190011_036.mp3` 中约 0.050 至 8.037 秒的一轮城堡主题。与所给 TAS 视频约 4:13 开始的 8-4 旋律做过比对。 |
+| 城堡、库霸 | `DM_20261118190011_036.mp3` 中约 0.050 至 8.037 秒的一轮城堡主题。与所给 TAS 视频约 4:13 开始的 8-4 旋律做过比对。 |
 | 无敌星 | `resources/music/invincible.ogg`，带 Starman 标签。无敌时间结束后恢复当前场景曲。 |
 | 触旗、过关、时间提示、死亡 | `resources/music/` 中的 `flagpole.wav`、`stage_clear.wav`、`world_clear.wav`、`out_of_time.wav`、`death.wav`。 |
 | 动作 | 跳跃、顶砖、踩踏、火球、出管、金币等音效，以及余时折分时的短音（`count_down.ogg`）来自 `resources/sound/`。 |

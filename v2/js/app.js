@@ -8,7 +8,7 @@
     {name:"青葱草甸",image:"meadow",rank:"入门",tag:"#c9e4a3",caption:"花管密道 · 树冠高路",blurb:"先在花园找到蘑菇和火焰花。带箭头的管口通往密室，藤蔓伸向树冠上的积分星。"},
     {name:"辉光晶洞",image:"cavern",rank:"进阶",tag:"#d8c8ed",caption:"竖井升降 · 水晶密室",blurb:"乘升降台穿过发光的晶湖。脚下的裂纹石板开始颤动时，就是起跳的信号。"},
     {name:"云顶风车",image:"sky",rank:"挑战",tag:"#f5d69c",caption:"空岛长藤 · 云海双路线",blurb:"飞龟守着风车岛的航线。沿低处的云桥稳步前进，或借弹簧跃进上层航道。"},
-    {name:"熔岩城堡",image:"castle",rank:"BOSS",tag:"#f4b5a4",caption:"回旋火杆 · 库克决战",blurb:"越过熔炉巡廊，在王座前迎战库克。看准它的冲锋方向，利用撞墙后的破绽。"},
+    {name:"熔岩城堡",image:"castle",rank:"BOSS",tag:"#f4b5a4",caption:"回旋火杆 · 库霸决战",blurb:"越过熔炉巡廊，在王座前迎战库霸。看准它的冲锋方向，利用撞墙后的破绽。"},
   ];
   const pad=n=>String(n).padStart(2,"0");
   const clock=n=>Math.floor(n/60)+":"+pad(Math.floor(n)%60);
@@ -131,7 +131,7 @@
       ["发射火球（取得火焰花后）","<kbd>X</kbd> / <kbd>F</kbd>"],["加速 / 暂停","<kbd>Shift</kbd> / <kbd>Esc</kbd>"],
     ].map(([label,keys])=>'<div class="guide-row"><strong>'+label+'</strong><span>'+keys+'</span></div>').join("");
     const old=legacyClears?'<p class="legacy-note">上一版已通关 '+legacyClears+' / 8。原记录已保留，新版单独计分。</p>':'';
-    showDetails("PLAYER MANUAL",'<div class="detail-inner"><h2 id="detail-title">操作手册</h2><p>管口上的箭头指向隐藏房间。爬藤时按跳跃键离藤，空中可改变方向。手机的方向键与动作键可同时按。</p><div class="guide-rows">'+rows+'</div><div class="guide-tips"><div><img src="./assets/sprites/fire-flower.png" alt="">蘑菇变大，可顶碎砖。吃花后能发射弹跳火球，同时最多两发。</div><div><img src="./assets/sprites/score-star.png" alt="">蓝色积分星每枚 1000 分，通关会登记收集位置。</div><div><img src="./assets/sprites/invincible-star.png" alt="">彩虹金星藏在少数问号砖里。十秒内可撞倒敌人和食人花。</div><div><i class="ico flag"></i>连续踩敌、龟壳连击会加分。高位触旗最高 5000 分，每秒余时另加 50 分。</div><div><i class="ico crown"></i>库克撞墙冒星时，用踩头或火球反击。</div></div>'+old+'</div>');
+    showDetails("PLAYER MANUAL",'<div class="detail-inner"><h2 id="detail-title">操作手册</h2><p>管口上的箭头指向隐藏房间。爬藤时按跳跃键离藤，空中可改变方向。手机的方向键与动作键可同时按。</p><div class="guide-rows">'+rows+'</div><div class="guide-tips"><div><img src="./assets/sprites/fire-flower.png" alt="">蘑菇变大，可顶碎砖。吃花后能发射弹跳火球，同时最多两发。</div><div><img src="./assets/sprites/score-star.png" alt="">蓝色积分星每枚 1000 分，通关会登记收集位置。</div><div><img src="./assets/sprites/invincible-star.png" alt="">彩虹金星藏在少数问号砖里。十秒内可撞倒敌人和食人花。</div><div><i class="ico flag"></i>连续踩敌、龟壳连击会加分。高位触旗最高 5000 分，每秒余时另加 50 分。</div><div><i class="ico crown"></i>库霸撞墙冒星时，用踩头或火球反击。</div></div>'+old+'</div>');
   }
   function setMode(mode){if(!Object.hasOwn(ARCADE_MODES,mode))return;store.mode=mode;save();renderProgress()}
   document.querySelector(".difficulty select").addEventListener("change",e=>setMode(e.target.value));
@@ -211,7 +211,7 @@
       const body=slot(game.index)+" · "+game.level.name+"　|　积分星 "+payload.stars.length+"/"+game.starTotal+
         '<br>冒险 '+payload.action+'　＋　触旗 '+payload.flag+'　＋　余时 '+payload.seconds+' × 50'+
         '<br><strong class="result-score">本关 '+formatted(payload.score)+' 分</strong>　行程累计 '+formatted(payload.total)+' 分';
-      overlayCard(final?"crown":"flag",final?"库克已被击败！":"关卡通关！",body,final?[["返回大厅",leave],["重玩本关",()=>launch(game.index)]]:[["进入下一关",()=>launch(game.index+1,{score:payload.total,form:game.player.form})],["重玩本关",()=>launch(game.index)],["返回大厅",leave]]);
+      overlayCard(final?"crown":"flag",final?"库霸已被击败！":"关卡通关！",body,final?[["返回大厅",leave],["重玩本关",()=>launch(game.index)]]:[["进入下一关",()=>launch(game.index+1,{score:payload.total,form:game.player.form})],["重玩本关",()=>launch(game.index)],["返回大厅",leave]]);
     }
   }
   function resetClock(){lastFrame=0;accumulator=0}
