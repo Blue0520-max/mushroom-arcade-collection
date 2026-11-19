@@ -2,14 +2,14 @@
 
 一个中文像素横版平台游戏的四版合辑，收录 V1 至 V4。穿过草甸、晶洞、云海和熔岩城堡，沿途收集星星，最后迎战库霸。每个版本都提供八个可直接选择的主关、休闲／经典／专家三档难度，以及键盘和手机触屏操作。
 
-## 试玩版本
+## 在线试玩
 
-| 版本 | 玩法 | 版本说明 |
+| 版本 | 玩法 | 试玩与说明 |
 | --- | --- | --- |
-| V1 · 初代冒险 | 踩弹簧、踢龟壳、搭升降台。每关藏有三枚星币，适合熟悉四个世界和库霸的招式。 | [V1 目录](v1/) · [操作与关卡](v1/README.md) |
-| V2 · 密室与火球 | 新增长关卡、八间管道密室、蹲行、攀藤和火焰花。蓝星加分，彩虹金星提供十秒无敌。触旗后每余一秒加 50 分。 | [V2 目录](v2/) · [操作与计分](v2/README.md) |
-| V3 · 渡船、炮舰与王座 | 换乘晶湖渡船、在倒悬矿井折返开闸，借风登上炮舰，迎战连续起跳和喷火的库霸。 | [V3 原版试玩](https://blue0520-max.github.io/mushroom-arcade-collection/v3-original/index.html) · [关卡与操作](v3-original/README.md) |
-| V4 · 洞穴龙拓展篇 | 跳上洞穴龙的背，骑龙吞掉正前方的小怪。避开点亮引信的炸弹龟和跃出熔岩的鬼火，再穿过炮弹密集的甲板。 | [V4 试玩](https://blue0520-max.github.io/mushroom-arcade-collection/v4/index.html) · [关卡与操作](v4/README.md) |
+| V1 · 初代冒险 | 踩弹簧、踢龟壳、搭升降台。每关藏有三枚星币，适合熟悉四个世界和库霸的招式。 | [V1 在线试玩](https://blue0520-max.github.io/mushroom-arcade-collection/v1/index.html) · [操作与关卡](v1/README.md) |
+| V2 · 密室与火球 | 新增长关卡、八间管道密室、蹲行、攀藤和火焰花。蓝星加分，彩虹金星提供十秒无敌。触旗后每余一秒加 50 分。 | [V2 在线试玩](https://blue0520-max.github.io/mushroom-arcade-collection/v2/index.html) · [操作与计分](v2/README.md) |
+| V3 · 渡船、炮舰与王座 | 换乘晶湖渡船、在倒悬矿井折返开闸，借风登上炮舰，迎战连续起跳和喷火的库霸。 | [V3 原版 在线试玩](https://blue0520-max.github.io/mushroom-arcade-collection/v3-original/index.html) · [关卡与操作](v3-original/README.md) |
+| V4 · 洞穴龙拓展篇 | 跳上洞穴龙的背，骑龙吞掉正前方的小怪。避开点亮引信的炸弹龟和跃出熔岩的鬼火，再穿过炮弹密集的甲板。 | [V4 在线试玩](https://blue0520-max.github.io/mushroom-arcade-collection/v4/index.html) · [关卡与操作](v4/README.md) |
 
 ## 开始游玩
 
