@@ -1,14 +1,15 @@
 # 超级玛丽 · 蘑菇王国大冒险
 
-一个中文像素横版平台游戏的三版合辑。穿过草甸、晶洞、云海和熔岩城堡，沿途收集星星，最后迎战库霸。每个版本都提供八个可直接选择的主关、休闲／经典／专家三档难度，以及键盘和手机触屏操作。
+一个中文像素横版平台游戏的三代合辑，收录第一版、第二版、第三版原版和增强版。穿过草甸、晶洞、云海和熔岩城堡，沿途收集星星，最后迎战库霸。每个版本都提供八个可直接选择的主关、休闲／经典／专家三档难度，以及键盘和手机触屏操作。
 
-## 三个版本
+## 试玩版本
 
 | 版本 | 玩法 | 版本说明 |
 | --- | --- | --- |
 | V1 · 初代冒险 | 踩弹簧、踢龟壳、搭升降台。每关藏有三枚星币，适合熟悉四个世界和库霸的招式。 | [V1 目录](v1/) · [操作与关卡](v1/README.md) |
 | V2 · 密室与火球 | 新增长关卡、八间管道密室、蹲行、攀藤和火焰花。蓝星加分，彩虹金星提供十秒无敌。触旗后每余一秒加 50 分。 | [V2 目录](v2/) · [操作与计分](v2/README.md) |
-| V3 · 渡船、炮舰与王座增强版 | 骑宠物龙吞怪，躲开炸弹龟、鬼火和更长的旋转火球。云龟追得更久，炮弹塔射得更勤。八关包括晶湖渡船、倒悬矿井和库霸王座。 | [V3 在线试玩](https://blue0520-max.github.io/mushroom-arcade-collection/v3/index.html) · [关卡与操作](v3/README.md) |
+| V3 原版 · 渡船、炮舰与王座 | 换乘晶湖渡船、在倒悬矿井折返开闸，借风登上炮舰，迎战连续起跳和喷火的库霸。 | [V3 原版试玩](https://blue0520-max.github.io/mushroom-arcade-collection/v3-original/index.html) · [关卡与操作](v3-original/README.md) |
+| V3 增强版 · 渡船、炮舰与王座 | 骑宠物龙吞怪，躲开炸弹龟、鬼火和更长的旋转火球。云龟追得更久，炮弹塔射得更勤。 | [V3 增强版试玩](https://blue0520-max.github.io/mushroom-arcade-collection/v3/index.html) · [关卡与操作](v3/README.md) |
 
 ## 开始游玩
 
@@ -22,12 +23,12 @@
 | 蹲下、钻管（V2 和 V3） | ↓ 或 S |
 | 攀藤（V2 和 V3） | 靠近藤蔓时按 ↑ 或 W |
 | 发射火球（V2 和 V3） | 火焰形态下按 X 或 F |
-| 骑龙吞敌／下龙（V3） | X 或 F 吞敌，按住 ↓ 再按 X 下龙 |
+| 骑龙吞敌／下龙（V3 增强版） | X 或 F 吞敌，按住 ↓ 再按 X 下龙 |
 | 暂停／继续 | Esc 或 P |
 
 ## 部署到 GitHub Pages
 
-把本目录的全部内容提交到仓库的 `main` 分支根目录。在 GitHub 的 **Settings → Pages** 中选择 **Deploy from a branch → main → /(root)**，保存后使用同页的 **Visit site**。根目录是版本选择页，`v1/`、`v2/`、`v3/` 都有独立的试玩入口。部署要求和可见范围以 [GitHub Pages 官方说明](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)为准。
+把本目录的全部内容提交到仓库的 `main` 分支根目录。在 GitHub 的 **Settings → Pages** 中选择 **Deploy from a branch → main → /(root)**，保存后使用同页的 **Visit site**。根目录是版本选择页，`v1/`、`v2/`、`v3-original/` 和 `v3/` 各有试玩入口。部署要求和可见范围以 [GitHub Pages 官方说明](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)为准。
 
 ## 素材
 

@@ -40,7 +40,7 @@ h1 span { color: #ffde83; }
 .start span { padding-inline-start: .45em; }
 .start:hover { background: #ebffc4; }
 h2 { font-size: 1.25rem; margin: 29px 0 13px; }
-.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
 .card {
   display: flex;
   flex-direction: column;
@@ -58,6 +58,10 @@ h3 { margin: 5px 0; font-size: 1.21rem; }
 .action { color: #ffde83; margin-top: auto; font-size: .9rem; font-weight: 700; }
 a:focus-visible { outline: 3px solid #ffde83; outline-offset: 4px; }
 footer { margin-top: 20px; color: #c1d6c9; font-size: .9rem; }
+
+@media (max-width: 960px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 
 @media (max-width: 670px) {
   .shell { width: calc(100% - 28px); padding-top: 14px; }
